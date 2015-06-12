@@ -1,84 +1,84 @@
-wocker-bashrc
+mocker-bashrc
 ===========
 
-The .bashrc file for Wocker.
+The .bashrc file for Mocker.
 
-## Shortcut commands for Wocker
+## Shortcut commands for Mocker
 
 ### Show the usage
 
 ```
-$ wocker --help
+$ mocker --help
 ```
 
 or
 
 ```
-$ wocker -h
+$ mocker -h
 ```
 
-### Update Wocker
+### Update Mocker
 
 ```
-$ wocker update
+$ mocker update
 ```
 
-### Run a new Wocker container using "ixkaito/wocker:latest"
+### Run a new Mocker container using "pontolinux/mocker:latest"
 
 ```
-$ wocker run
+$ mocker run
 ```
 
-### Run a new Wocker container and assign a name
+### Run a new Mocker container and assign a name
 
 ```
-$ wocker run --name <containername>
-```
-
-or
-
-```
-$ wocker run --name=<containername>
-```
-
-e.g.
-
-```
-$ wocker run --name wordpress
-```
-
-### Use another docker image to run a new Wocker container
-
-```
-$ wocker run <image>
-```
-
-e.g.
-
-```
-$ wocker run wocker/wocker:centos6
-```
-
-### Use another docker image to run a new Wocker container and assign a name
-
-```
-$ wocker run --name <containername> <image>
+$ mocker run --name <containername>
 ```
 
 or
 
 ```
-$ wocker run --name=<containername> <image>
+$ mocker run --name=<containername>
 ```
 
 e.g.
 
 ```
-$ wocker run --name wordpress wocker/wocker:centos6
+$ mocker run --name magento
+```
+
+### Use another docker image to run a new Mocker container
+
+```
+$ mocker run <image>
+```
+
+e.g.
+
+```
+$ mocker run mocker/mocker:centos6
+```
+
+### Use another docker image to run a new Mocker container and assign a name
+
+```
+$ mocker run --name <containername> <image>
+```
+
+or
+
+```
+$ mocker run --name=<containername> <image>
+```
+
+e.g.
+
+```
+$ mocker run --name magento mocker/mocker:centos6
 ```
 
 ### Remove all containers and files
 
 ```
-$ wocker destroy
+$ mocker destroy
 ```
