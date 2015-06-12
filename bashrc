@@ -1,5 +1,5 @@
-wocker_usage() {
-  echo "Usage: wocker COMMAND [arg...]"
+mocker_usage() {
+  echo "Usage: mocker COMMAND [arg...]"
   echo ""
   echo "Commands:"
   echo "    attach      Attach to a running container (Docker alias)"
@@ -43,53 +43,53 @@ wocker_usage() {
   echo "    tag         Tag an image into a repository (Docker alias)"
   echo "    top         Lookup the running processes of a container (Docker alias)"
   echo "    unpause     Unpause a paused container (Docker alias)"
-  echo "    update      Update Wocker to the latest version"
-  echo "    version     Show the Wocker version information"
+  echo "    update      Update Mocker to the latest version"
+  echo "    version     Show the Mocker version information"
   echo "    --version"
   echo "    -v"
   echo "    wait        Block until a container stops, then print its exit code (Docker alias)"
 }
 
-wocker_run_usage() {
-  echo 'Usage: wocker run [--name=""] [IMAGE[:TAG]]'
+mocker_run_usage() {
+  echo 'Usage: mocker run [--name=""] [IMAGE[:TAG]]'
   echo ''
   echo 'Run a new container'
   echo ''
   echo '  --name=""     Assign a name to the container. If omitted, it will be a random name.'
-  echo '  IMAGE[:TAG]   Docker image. If omitted, it will be wocker/wocker:latest.'
+  echo '  IMAGE[:TAG]   Docker image. If omitted, it will be mocker/mocker:latest.'
 }
 
-wocker_rm_usage() {
-  echo 'Usage: wocker rm [--force=false] CONTAINER [CONTAINER...]'
+mocker_rm_usage() {
+  echo 'Usage: mocker rm [--force=false] CONTAINER [CONTAINER...]'
   echo ''
   echo 'Remove one or more containers'
   echo ''
   echo '  -f, --force=false   Force the removal of a running container (uses SIGKILL)'
 }
 
-wocker_update_usage() {
-  echo 'Usage: wocker update'
+mocker_update_usage() {
+  echo 'Usage: mocker update'
   echo ''
-  echo 'Update the command line and the Docker image of Wocker.'
+  echo 'Update the command line and the Docker image of Mocker.'
 }
 
-wocker_version_usage() {
-  echo 'Usage: wocker version | --version | -v'
+mocker_version_usage() {
+  echo 'Usage: mocker version | --version | -v'
   echo ''
-  echo 'Show the Wocker version information'
+  echo 'Show the Mocker version information'
 }
 
-wocker_destroy_usage() {
-  echo 'Usage: wocker destroy'
+mocker_destroy_usage() {
+  echo 'Usage: mocker destroy'
   echo ''
   echo 'Force remove all containers and local related files'
 }
 
-wocker_wp_usage() {
-  echo 'Usage: wocker wp COMMAND SUBCOMMAND arg...'
+mocker_mage_usage() {
+  echo 'Usage: mocker mage COMMAND SUBCOMMAND arg...'
   echo ''
-  echo 'Execute WP-CLI commands in the running container'
-  echo 'See: http://wp-cli.org/'
+  echo 'Execute n98-magerun commands in the running container'
+  echo 'See: http://magerun.net/'
   echo ''
   echo 'Commands:'
   echo '    cache           Manage the object cache.'
@@ -125,11 +125,11 @@ wocker_wp_usage() {
   echo '    widget          Manage sidebar widgets.'
 }
 
-wocker() {
+mocker() {
 
-  local version='0.5.0'
+  local version='0.0.1'
   local red=31
-  local image='wocker/wocker:latest'
+  local image='mocker/mocker:latest'
   local cname
   local ports
   local cid
@@ -143,12 +143,12 @@ wocker() {
   case "$1" in
 
     #
-    # $ wocker run
+    # $ mocker run
     #
     'run' )
 
       if [[ "$2" = '--help' ]]; then
-        wocker_run_usage
+        mocker_run_usage
       else
 
         if [[ "$2" = '--name' ]]; then
@@ -169,11 +169,11 @@ wocker() {
         if [[ $ports =~ "HostIp:0.0.0.0 HostPort:80" ]]; then
           echo -e "\033[${red}mCannot start container $cname: Bind for 0.0.0.0:80 failed: port is already allocated\033[m"
 
-        # Use existing WordPress files to run a container
+        # Use existing Magento files to run a container
         elif [[ $cname && -d ~/data/${cname} ]]; then
-          docker run -d --name $cname -p 80:80 -p 3306:3306 -v ~/data/${cname}:/var/www/wordpress:rw $image
+          docker run -d --name $cname -p 80:80 -p 3306:3306 -v ~/data/${cname}:/var/www/magento:rw $image
 
-        # Or copy WordPress files from the image to run a container
+        # Or copy Magento files from the image to run a container
         else
 
           if [[ $cname ]]; then
@@ -187,23 +187,23 @@ wocker() {
           dirname=$(docker inspect --format='{{.Name}}' $(docker ps -l -q)) && \
           dirname=${dirname#*/} && \
           cname=$dirname
-          docker cp $(docker ps -l -q):/var/www/wordpress ~/data/${cid} && \
-          mv ~/data/${cid}/wordpress ~/data/${dirname} && \
+          docker cp $(docker ps -l -q):/var/www/magento ~/data/${cid} && \
+          mv ~/data/${cid}/magento ~/data/${dirname} && \
           rm -rf ~/data/${cid} && \
           docker rm -f $(docker ps -l -q) && \
-          docker run -d --name $cname -p 80:80 -p 3306:3306 -v ~/data/${dirname}:/var/www/wordpress:rw $image
+          docker run -d --name $cname -p 80:80 -p 3306:3306 -v ~/data/${dirname}:/var/www/magento:rw $image
         fi
 
       fi
       ;;
 
     #
-    # $ wocker rm
+    # $ mocker rm
     #
     'rm' )
 
       if [[ "$2" = '--help' ]]; then
-        wocker_rm_usage
+        mocker_rm_usage
       else
 
         case "$2" in
@@ -234,25 +234,25 @@ wocker() {
       ;;
 
     #
-    # $ wocker update
+    # $ mocker update
     #
     'update' )
 
       if [[ "$2" = '--help' ]]; then
-        wocker_update_usage
+        mocker_update_usage
       else
-        curl -O https://raw.githubusercontent.com/wckr/wocker-bashrc/master/bashrc && mv -f bashrc ~/.bashrc && source ~/.bashrc
-        docker pull wocker/wocker:latest
+        curl -O https://raw.githubusercontent.com/pontolinux/mocker-bashrc/master/bashrc && mv -f bashrc ~/.bashrc && source ~/.bashrc
+        docker pull mocker/mocker:latest
       fi
       ;;
 
     #
-    # $ wocker destroy
+    # $ mocker destroy
     #
     'destroy' )
 
       if [[ "$2" = '--help' ]]; then
-        wocker_destroy_usage
+        mocker_destroy_usage
       else
 
         if [[ $(docker ps -a -q) ]]; then
@@ -282,30 +282,30 @@ wocker() {
       ;;
 
     #
-    # $ wocker --help | $ wocker -h
+    # $ mocker --help | $ mocker -h
     #
     'help' | '--help' | '-h' )
-      wocker_usage
+      mocker_usage
       ;;
 
     #
-    # $ wocker version | $ wocker --version | $ wocker -v
+    # $ mocker version | $ mocker --version | $ mocker -v
     #
     'version' | '--version' | '-v' )
       if [[ "$2" = '--help' ]]; then
-        wocker_version_usage
+        mocker_version_usage
       else
         echo "Version: $version"
       fi
       ;;
 
     #
-    # $ wocker wp
+    # $ mocker wp
     #
     'wp' )
 
       if [[ "$2" = '--help' ]]; then
-        wocker_wp_usage
+        mocker_wp_usage
       else
         if [[ $(docker ps -q) ]]; then
           cid=$(docker ps -q)
@@ -324,10 +324,10 @@ wocker() {
       ;;
 
     #
-    # Show Wocker usage
+    # Show Mocker usage
     #
     * )
-      wocker_usage
+      mocker_usage
       ;;
 
   esac
